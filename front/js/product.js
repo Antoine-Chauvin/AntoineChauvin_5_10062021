@@ -8,7 +8,7 @@ var name = url.searchParams.get("article");
 async function fetchProduct() {
     let article = await fetch("http://localhost:3000/api/products/" + name);
     article = await article.json();
-    console.log(article);
+    
 
     let itemImg = document.querySelector('.item__img');
     itemImg.innerHTML = `<img src="${article.imageUrl}" alt="${article.altTxt}"></img>`
@@ -25,7 +25,7 @@ async function fetchProduct() {
     let itemColors = document.getElementById('colors')
     for (i = 0; i < article.colors.length; i++) {
         let color = article.colors[i]
-        console.log(color)
+        
         itemColors.innerHTML += `<option value=${color}>${color}</option>`
 
     }
@@ -35,13 +35,15 @@ fetchProduct()
 
 /* Local Storage */
 
+
+
 let pannier = []
 if (localStorage.pannier) {
     pannier = JSON.parse(localStorage.pannier);
 }
 /* On vit récupérer les infos de notre choix pour le mettre dans le panier */
 let validation = document.getElementById('addToCart')
-validation.addEventListener('click', function () {
+validation.addEventListener('click', async function () {
     
     let colorChosen = document.getElementById('colors')
     let colorPannier = colorChosen.value 
@@ -61,15 +63,11 @@ let verifLigne = false
         }
     }
     if(!verifLigne){
-        pannier.push({ id: name, color:colorPannier, qty: numberPannier })
+        let article = await fetch("http://localhost:3000/api/products/" + name);
+        article = await article.json();
+        pannier.push({ id: name, color:colorPannier, qty: numberPannier, price: article.price })
     }
 /* On transform et sauvegarde le panier dasn le local storage */
     let pannierAStocker = JSON.stringify(pannier);
     localStorage.pannier = pannierAStocker;
 })
-
-
-
-
-
-
