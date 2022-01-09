@@ -53,26 +53,26 @@ console.log(btnDeleteItems);
 
 for (let i = 0; i < btnDeleteItems.length; i++) {
     btnDeleteItems[i].addEventListener("click", function (e) {
-            e.preventDefault();
+        e.preventDefault();
 
-            //-- Séléction de l'id du produit qui va être supp en cliquant sur le Btn--//
-            let idDelet = basket[i]._id;
+        //-- Séléction de l'id du produit qui va être supp en cliquant sur le Btn--//
+        let idDelet = basket[i]._id;
 
-            //-- Avec la méthode FILTER je sélectionne les éléments à garder et je supprime l'élément ou le Btn supprimer a été cliqué--//
-            basket = basket.filter(function (el) {
-                return el._id !== idDelet;
-            });
-
-            //-- Envoie la variable dans le local Storage --//
-            localStorage.setItem("cart", JSON.stringify(basket));
-
-            //-- Alert pour avertit que le produit a bien été supprimé --// 
-            alert("Ce produit a été supprimé du panier");
-
-            //-- Recharge de la page --//
-            location.reload();
-
+        //-- Avec la méthode FILTER je sélectionne les éléments à garder et je supprime l'élément ou le Btn supprimer a été cliqué--//
+        basket = basket.filter(function (el) {
+            return el._id !== idDelet;
         });
+
+        //-- Envoie la variable dans le local Storage --//
+        localStorage.setItem("cart", JSON.stringify(basket));
+
+        //-- Alert pour avertit que le produit a bien été supprimé --// 
+        alert("Ce produit a été supprimé du panier");
+
+        //-- Recharge de la page --//
+        location.reload();
+
+    });
 }
 
 
@@ -84,23 +84,23 @@ const modifQuantity = document.querySelectorAll(".itemQuantity");
 
 for (let j = 0; j < modifQuantity.length; j++) {
     modifQuantity[j].addEventListener("change", function (e) {
-            e.preventDefault();
+        e.preventDefault();
 
-            let quantityChange = basket[j].quantity;
-            let quantityValue = modifQuantity[j].valueAsNumber;
+        let quantityChange = basket[j].quantity;
+        let quantityValue = modifQuantity[j].valueAsNumber;
 
-            const result = basket.find(function (el) {
-                    return el.quantityValue !== quantityChange;
-                });
+        const result = basket.find(function (el) {
+            return el.quantityValue !== quantityChange;
+        });
 
-            result.quantity = quantityValue;
-            basket[j].quantity = result.quantity;
+        result.quantity = quantityValue;
+        basket[j].quantity = result.quantity;
 
-            localStorage.setItem("cart", JSON.stringify(basket));
+        localStorage.setItem("cart", JSON.stringify(basket));
 
-            //-- Recharge de la page --//
-            location.reload();
-        })
+        //-- Recharge de la page --//
+        location.reload();
+    })
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~//
@@ -249,67 +249,67 @@ form();
 function sendForm() {
 
     btnOrder.addEventListener("click", function (e) {
-            e.preventDefault();
+        e.preventDefault();
 
-            // -- Création d'un contact -- //
-            const contact = {
-                firstName: firstName.value,
-                lastName: lastName.value,
-                address: address.value,
-                city: city.value,
-                email: email.value
-            };
-
-
-            const products = [];
-            for (let l = 0; l < basket.length; l++) {
-                products.push(basket[l]._id);
-            }
+        // -- Création d'un contact -- //
+        const contact = {
+            firstName: firstName.value,
+            lastName: lastName.value,
+            address: address.value,
+            city: city.value,
+            email: email.value
+        };
 
 
-            fetch('http://localhost:3000/api/products/order', {
-                method: 'post',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ "contact": contact, "products": products })
+        const products = [];
+        for (let l = 0; l < basket.length; l++) {
+            products.push(basket[l]._id);
+        }
+
+
+        fetch('http://localhost:3000/api/products/order', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ "contact": contact, "products": products })
+        })
+            .then(function (res) {
+                return res.json();
             })
-                .then(function (res) {
-                        return res.json();
-                    })
-                .then(function (data) {
-                        localStorage.setItem("order", JSON.stringify(data.orderId));
-                        //localStorage.clear();
-                        console.log(data);
+            .then(function (data) {
+                localStorage.setItem("order", JSON.stringify(data.orderId));
+                //localStorage.clear();
+                console.log(data);
 
 
-                    });
-            document.location.href = "confirmation.html";
-        });
+            });
+        document.location.href = "confirmation.html";
+    });
 }
 sendForm();
 
 
 
 
- /* const contact = {firstName: "firstName", lastName: "test", address: "test", city: "test", email: "test@test.fr"};
- const products = ["107fb5b75607497b96722bda5b504926"];
+/* const contact = {firstName: "firstName", lastName: "test", address: "test", city: "test", email: "test@test.fr"};
+const products = ["107fb5b75607497b96722bda5b504926"];
 
- btnOrder.addEventListener("click",function (e) {
-         e.preventDefault();
-         fetch('http://localhost:3000/api/products/order', {
-             method: 'post',
-             headers: {
-                 'Accept': 'application/json',
-                 'Content-Type': 'application/json'
-             },
-             body: JSON.stringify({ "contact": contact, "products": products })
-         })
-             .then(function (response) {
-                 // console.log(response.json());
-                 response.json().then(function (data) {
-                         console.log(data);
-                     });
-             });
-     } */
+btnOrder.addEventListener("click",function (e) {
+        e.preventDefault();
+        fetch('http://localhost:3000/api/products/order', {
+            method: 'post',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ "contact": contact, "products": products })
+        })
+            .then(function (response) {
+                // console.log(response.json());
+                response.json().then(function (data) {
+                        console.log(data);
+                    });
+            });
+    } */

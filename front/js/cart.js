@@ -5,7 +5,7 @@
     additionner les prix
      */
 
-    /* Fonction pour calcul total de la quantité d'objets dans le pannier */
+/* Fonction pour calcul total de la quantité d'objets dans le pannier */
 function countQtyTotal(pannier) {
     let qtyTotal = 0
     for (let article of pannier) {
@@ -23,6 +23,11 @@ function countPriceTot(pannier) {
     return totPrice
 }
 
+function savePannier(pannier) {
+    let pannierAStocker = JSON.stringify(pannier);
+    localStorage.pannier = pannierAStocker;
+    return pannier
+}
 
 async function affichagePannier() {
     let pannier = []
@@ -222,15 +227,12 @@ formulaire.addEventListener('submit', async function (sendingForm) {
         idOrder = JSON.parse(localStorage.order);
         console.log(idOrder)
     }
+    //clear le pannier
+    if (pannier < 1) {
+        let pannier = []
+        savePannier(pannier)
+    }
 
-    
     document.location.href = "confirmation.html?orderID=" + idOrder;
 
 })
-
-
-
-
-
-
-
